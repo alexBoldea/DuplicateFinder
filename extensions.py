@@ -5,7 +5,7 @@ import os
 import re
 
 songNameRegex = re.compile(r'.\w+$')                                            # regex to find extension goes here
-active = re.compile(r'.\S+')                                                    # regex to compare extension to the file contents (to get unique extensions)
+active = re.compile(r'.\S+')                                                    # regex to get the list of extensions
 
 os.chdir('c:\\users\\alex_\\Desktop')
 path = "c:\\users\\alex_\\Desktop\\SongList.xlsx"
