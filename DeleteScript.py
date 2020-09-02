@@ -1,6 +1,6 @@
 #! python3
 
-# FileNotFoundError: [WinError 2] The system cannot find the file specified
+# FileNotFoundError: [WinError 2] The system cannot find the file specified - FIXED by "os.path.exists()"
 # ===========================================================================================
 # This happens when the file appears in the list on a line after it was already deleted above
 
