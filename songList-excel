@@ -1,11 +1,12 @@
 #! python3
 
+import re
 import os
 import openpyxl
 import time
 start_time = time.time()
 
-os.chdir('c:\\users\\alex_\\Desktop')
+os.chdir('c:\\users\\alex_\\Desktop\\dis')
 
 wb = openpyxl.Workbook()
 sheet = wb['Sheet']
@@ -30,6 +31,8 @@ for folderName, subfolders, filenames in os.walk(workingFolder):
         line += 1
 
 wb.save('SongListTest.xlsx')
+
+# create a short script to write all file extensions from sheet.cell(row = line, column = 1, value = item) to a text file called "extensions.txt"
 
 # create a new sheet, for both duplicates (same name, same size)
 bothDuplicates = wb.create_sheet("Duplicates")
@@ -78,10 +81,6 @@ for counter in range (2, line):
 
 wb.save('SongListTest.xlsx')
 
-inputFile = open('C:\\Users\\alex_\\Desktop\\info.txt', 'w')
-# for i in range (2,line):
-    # inputFile.write('\nSong:\n' + sheet.cell(row = i, column = 1).value +
-                    # '\nSize:\n' + sheet.cell(row = i, column = 2).value +
-                    # '\nPath:\n' + sheet.cell(row = i, column = 3).value + '\n')
+inputFile = open('C:\\Users\\alex_\\Desktop\\dis\\info.txt', 'w')
 inputFile.write("--- %s seconds ---" % (time.time() - start_time))
 inputFile.close()
