@@ -23,33 +23,35 @@ class Node:
                           '.html', '.ini', '.TXT', '.url', '.htm', '.m3u8', '.cue', '.BUP', '.IFO',
                           '.tmp', '.missing', '.rtf', '.DS_Store'):
             os.unlink(data)
-        if self.hdata:
-            if hash(data) < self.hdata:
-                if self.left is None:
-                    self.left = Node(data, path, size)
+        if mo.group() in ('.mp3', '.MP3', '.wma', '.Mp3', '.m4a', '.flac', '.mpg',
+                          '.mp4', '.VOB', '.wav', '.mkv', '.avi'):
+            if self.hdata:
+                if hash(data) < self.hdata:
+                    if self.left is None:
+                        self.left = Node(data, path, size)
+                    else:
+                        self.left.insert(data, path, size)
+                elif hash(data) > self.hdata:
+                    if self.right is None:
+                        self.right = Node(data, path, size)
+                    else:
+                        self.right.insert(data, path, size)
                 else:
-                    self.left.insert(data, path, size)
-            elif hash(data) > self.hdata:
-                if self.right is None:
-                    self.right = Node(data, path, size)
-                else:
-                    self.right.insert(data, path, size)
+                    #this is where the song should actually get deleted
+                    print('Which file to delete: 1 or 2 ')
+                    if input(data + '\n\n1: of size ' + size + ' at path: ' + path + ' or '
+                                '\n2: of size ' + self.size + ' at path: ' + self.path) == '1':
+                        os.unlink(path + data)
+                        return
+                    else:
+                        os.unlink(self.path + self.data)
+                        self.data = data
+                        self.path = path
+                        self.size = size
             else:
-                #this is where the song should actually get deleted
-                print('Which file to delete: 1 or 2 ')
-                if input('1: ' + data + ' of size ' + size + ' at path: ' + path + ' or \n'
-                            '2: ' + self.data + ' of size ' + self.size + ' at path: ' + self.path) == '1':
-                    os.unlink(path + data)
-                    return
-                else:
-                    os.unlink(self.path + self.data)
-                    self.data = data
-                    self.path = path
-                    self.size = size
-        else:
-            self.data = data
-            self.path = path
-            self.size = size
+                self.data = data
+                self.path = path
+                self.size = size
 
 
     def PrintTree(self):
@@ -66,6 +68,7 @@ for folderName, subf, filenames in os.walk(workingFolder, topdown=True):
         path = os.path.join(folderName +'\\')
         size = str(os.stat(os.path.join(folderName +'\\'+ data)).st_size)
         root.insert(data, path, size)
+
 
 
 root.PrintTree()
