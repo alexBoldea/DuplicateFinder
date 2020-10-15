@@ -31,7 +31,7 @@ boo = active.findall(inputFile.read())
 
 boo = list(dict.fromkeys(boo))                                                  # remove duplicates
 #print(boo)
-inputFile.close()
+inputFile.close() 
 
 inputFile = open('C:\\Users\\alex_\\Desktop\\extensions.txt', 'w')
 inputFile.write('Extensions: \n')
