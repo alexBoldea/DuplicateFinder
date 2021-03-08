@@ -6,6 +6,7 @@
 # import modules
 # window layout definition
 # binary tree definition
+# excel list function
 # get working folder from the user
 # create window
 # loop through events in the window
@@ -66,7 +67,7 @@ class Node:
         self.data = data
         self.hdata = hash(data) # this property is an unique integer used to build the binary tree
         self.path = path # needed for the user info
-        self.size = size # needed for the user info
+        self.size = int(size) # needed for the user info
 
     def insert(self, data, path, size):
         # Compare the new value with the parent node
@@ -78,13 +79,13 @@ class Node:
             os.unlink(path + '/' + data)
         if mo.group() in ('.mp3', '.MP3', '.wma', '.Mp3', '.m4a', '.flac', '.mpg',
                           '.mp4', '.VOB', '.wav', '.mkv', '.avi'):
-            if self.hdata:
-                if hash(data) < self.hdata:
+            if self.hdata and self.size:
+                if (hash(data) + size) < (self.hdata + self.size):
                     if self.left is None:
                         self.left = Node(data, path, size)
                     else:
                         self.left.insert(data, path, size)
-                elif hash(data) > self.hdata:
+                elif (hash(data) + size) > (self.hdata + self.size):
                     if self.right is None:
                         self.right = Node(data, path, size)
                     else:
@@ -92,8 +93,8 @@ class Node:
                 else:                                       # this is where the file actually gets deleted
                     displayPath1 = str.replace(path, workingFolder, '')
                     displayPath2 = str.replace(self.path, workingFolder, '')
-                    displaySize1 = '{:.2f}'.format(int(size)/1048576)
-                    displaySize2 = '{:.2f}'.format(int(self.size)/1048576)
+                    displaySize1 = '{:.2f}'.format(size/1048576)
+                    displaySize2 = '{:.2f}'.format(self.size/1048576)
                     window['-SONGNAME-'].update(data)                   # the song name is displayed in the app window
                     window['-LOC1-'].update('\n' + displayPath1 + '\n\nSize: ' + displaySize1 + ' MB')   # display the first location and size
                     window['-LOC2-'].update('\n' + displayPath2 + '\n\nSize: ' + displaySize2 + ' MB')   # display the second location and size
@@ -113,6 +114,8 @@ class Node:
                 self.data = data
                 self.path = path
                 self.size = size
+
+#----------------------------Define the excel list function----------------------------#
 
 def ListGenerator(workingFolder):
     wb = openpyxl.Workbook()
@@ -166,11 +169,11 @@ while True:
         window.refresh()
         window['Start'].update(disabled=True)
         if workingFolder:
-            root = Node('a', 'b', 'c')
+            root = Node('a', 'b', 0)
             for folderName, subf, filenames in os.walk(workingFolder, topdown=False):
                 for data in filenames:
                     path = os.path.join(folderName + '/')
-                    size = str(os.stat(os.path.join(folderName + '/' + data)).st_size)
+                    size = os.stat(os.path.join(folderName + '/' + data)).st_size
                     window['Generate Excel list of all the files'].update(disabled=True)
                     root.insert(data, path, size)
                     if not os.listdir(folderName):
